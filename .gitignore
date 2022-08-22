@@ -106,3 +106,5 @@ dist
 
 # hide my api key
 src/secrets.js
+
+.DS_Store

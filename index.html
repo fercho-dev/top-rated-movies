@@ -4,14 +4,100 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Peliculas</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Roboto:ital,wght@0,300;0,400;0,700;1,500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="./css/app.css">
+    <title>Peliculas</title>
 </head>
 <body>
-    <h1>Top rated Movies</h1>
+    <section id="section--home" class="inactive">
+        <header class="section_header--home">
+            <div class="section--search-bar">
+                <input type="text" placeholder="Buscar">
+                <span></span>
+            </div>
+        </header>
+        <h2 class="section--title">
+            Conoce las mejores películas del mundo.
+        </h2>
+        <section class="section--movies-row-container" id="home-movies-container">
+        </section>
+    </section>
+
+    <section id="section--movie">
+        <header class="section_header--movie">
+            <button id="movie-back-btn"></button>
+        </header>
+        <div class="movie-cover">
+            <img src="" alt="movie poster" id="movie-cover-id">
+            <p>☆ <span id="movie-vote-average"></span></p>
+        </div>
+        <div class="movie-description">
+            <p id="movie-overview"></p>
+        </div>
+        <div class="movie-streaming-options">
+            <p>Puedes ver "<span id="movie-original-title"></span>" en:</p>
+            <div class="streaming-options-container" id="streaming-container">
+            </div>
+        </div>
+        <div class="movie-cast-container">
+            <p>Equipo y cast:</p>
+            <div class="cast-people-container" id="movie-cast-crew-container">
+            </div>
+        </div>
+    </section>
+
+    <section id="section--country">
+        <header class="section_header--country">
+            <button id="country-back-btn"></button>
+            <div class="section--search-bar">
+                <input type="text" placeholder="Buscar">
+                <span></span>
+            </div>
+        </header>
+        <h2 class="section--title" id="title--country">
+        </h2>
+        <section class="movies-scroll-container" id="country-movies-container">
+        </section>
+    </section>
+
+    <section id="section--search">
+        <header class="section_header--search">
+            <button></button>
+            <div class="section--search-bar">
+                <input type="text" placeholder="Buscar">
+                <span></span>
+            </div>
+        </header>
+        <h2 class="section--title">
+            Resultados de busqueda:
+        </h2>
+        <section class="movies-scroll-container">
+            <figure class="movie-poster">
+                <img src="./assets/img/bitcoinbaby.jpg" alt="movie poster">
+            </figure><figure class="movie-poster">
+                <img src="./assets/img/bitcoinbaby.jpg" alt="movie poster">
+            </figure><figure class="movie-poster">
+                <img src="./assets/img/bitcoinbaby.jpg" alt="movie poster">
+            </figure>
+            </figure><figure class="movie-poster">
+                <img src="./assets/img/bitcoinbaby.jpg" alt="movie poster">
+            </figure>
+            </figure><figure class="movie-poster">
+                <img src="./assets/img/bitcoinbaby.jpg" alt="movie poster">
+            </figure>
+            </figure><figure class="movie-poster">
+                <img src="./assets/img/bitcoinbaby.jpg" alt="movie poster">
+            </figure>
+            </figure><figure class="movie-poster">
+                <img src="./assets/img/bitcoinbaby.jpg" alt="movie poster">
+            </figure>
+        </section>
+    </section>
 
 
-    <script src="./src/secrets.js"></script> // here I have my API_KEY
+    <script src="./src/secrets.js"></script>
     <script src="./src/main.js"></script>
 </body>
 </html>
