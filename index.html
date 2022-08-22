@@ -14,36 +14,113 @@
     <section id="section--home" class="inactive">
         <header class="section_header--home">
             <div class="section--search-bar">
-                <input type="text" placeholder="Buscar">
-                <span></span>
+                <input type="text" placeholder="Buscar" id="search-input-home">
+                <button class="search-btn"></button>
             </div>
         </header>
         <h2 class="section--title">
             Conoce las mejores películas del mundo.
         </h2>
         <section class="section--movies-row-container" id="home-movies-container">
+            <div class="section_div--movies-row">
+                <div class="movies-row--heading home-row-heading-loading">
+                    <span class="movies-row--country"></span>
+                    <span class="movies-row--btn see-more-btn"></span>
+                </div>
+                <div class="movies--slider home-row-movies-loading">
+                    <figure></figure>
+                    <figure></figure>
+                </div>
+            </div>
+            <div class="section_div--movies-row">
+                <div class="movies-row--heading home-row-heading-loading">
+                    <span class="movies-row--country"></span>
+                    <span class="movies-row--btn see-more-btn"></span>
+                </div>
+                <div class="movies--slider home-row-movies-loading">
+                    <figure></figure>
+                    <figure></figure>
+                </div>
+            </div>
+            <div class="section_div--movies-row">
+                <div class="movies-row--heading home-row-heading-loading">
+                    <span class="movies-row--country"></span>
+                    <span class="movies-row--btn see-more-btn"></span>
+                </div>
+                <div class="movies--slider home-row-movies-loading">
+                    <figure></figure>
+                    <figure></figure>
+                </div>
+            </div>
+            <div class="section_div--movies-row">
+                <div class="movies-row--heading home-row-heading-loading">
+                    <span class="movies-row--country"></span>
+                    <span class="movies-row--btn see-more-btn"></span>
+                </div>
+                <div class="movies--slider home-row-movies-loading">
+                    <figure></figure>
+                    <figure></figure>
+                </div>
+            </div>
+            <div class="section_div--movies-row">
+                <div class="movies-row--heading home-row-heading-loading">
+                    <span class="movies-row--country"></span>
+                    <span class="movies-row--btn see-more-btn"></span>
+                </div>
+                <div class="movies--slider home-row-movies-loading">
+                    <figure></figure>
+                    <figure></figure>
+                </div>
+            </div>
+            <div class="section_div--movies-row">
+                <div class="movies-row--heading home-row-heading-loading">
+                    <span class="movies-row--country"></span>
+                    <span class="movies-row--btn see-more-btn"></span>
+                </div>
+                <div class="movies--slider home-row-movies-loading">
+                    <figure></figure>
+                    <figure></figure>
+                </div>
+            </div>
+            <div class="section_div--movies-row">
+                <div class="movies-row--heading home-row-heading-loading">
+                    <span class="movies-row--country"></span>
+                    <span class="movies-row--btn see-more-btn"></span>
+                </div>
+                <div class="movies--slider home-row-movies-loading">
+                    <figure></figure>
+                    <figure></figure>
+                </div>
+            </div>
         </section>
     </section>
 
     <section id="section--movie">
         <header class="section_header--movie">
             <button id="movie-back-btn"></button>
+            <button id="movie-home-btn"></button>
         </header>
-        <div class="movie-cover">
+        <div class="movie-cover" id="movie-cover-loading">
             <img src="" alt="movie poster" id="movie-cover-id">
             <p>☆ <span id="movie-vote-average"></span></p>
         </div>
         <div class="movie-description">
-            <p id="movie-overview"></p>
+            <p id="movie-overview" class="movie-overview-loading"></p>
         </div>
         <div class="movie-streaming-options">
             <p>Puedes ver "<span id="movie-original-title"></span>" en:</p>
-            <div class="streaming-options-container" id="streaming-container">
+            <div class="streaming-options-container movie-streaming-loading" id="streaming-container">
             </div>
         </div>
         <div class="movie-cast-container">
             <p>Equipo y cast:</p>
             <div class="cast-people-container" id="movie-cast-crew-container">
+                <figure class="cast-person"></figure>
+                <figure class="cast-person"></figure>
+                <figure class="cast-person"></figure>
+                <figure class="cast-person"></figure>
+                <figure class="cast-person"></figure>
+                <figure class="cast-person"></figure>
             </div>
         </div>
     </section>
@@ -51,53 +128,49 @@
     <section id="section--country">
         <header class="section_header--country">
             <button id="country-back-btn"></button>
+            <button id="country-home-btn"></button>
             <div class="section--search-bar">
-                <input type="text" placeholder="Buscar">
-                <span></span>
+                <input type="text" placeholder="Buscar" id="search-input-country">
+                <button class="search-btn"></button>
             </div>
         </header>
         <h2 class="section--title" id="title--country">
         </h2>
         <section class="movies-scroll-container" id="country-movies-container">
+            <figure class="movie-poster"></figure>
+            <figure class="movie-poster"></figure>
+            <figure class="movie-poster"></figure>
+            <figure class="movie-poster"></figure>
+            <figure class="movie-poster"></figure>
+            <figure class="movie-poster"></figure>
         </section>
     </section>
 
     <section id="section--search">
         <header class="section_header--search">
-            <button></button>
+            <button id="search-back-btn"></button>
+            <button id="search-home-btn"></button>
             <div class="section--search-bar">
-                <input type="text" placeholder="Buscar">
-                <span></span>
+                <input type="text" placeholder="Buscar" id="search-input-search">
+                <button class="search-btn"></button>
             </div>
         </header>
         <h2 class="section--title">
             Resultados de busqueda:
         </h2>
-        <section class="movies-scroll-container">
-            <figure class="movie-poster">
-                <img src="./assets/img/bitcoinbaby.jpg" alt="movie poster">
-            </figure><figure class="movie-poster">
-                <img src="./assets/img/bitcoinbaby.jpg" alt="movie poster">
-            </figure><figure class="movie-poster">
-                <img src="./assets/img/bitcoinbaby.jpg" alt="movie poster">
-            </figure>
-            </figure><figure class="movie-poster">
-                <img src="./assets/img/bitcoinbaby.jpg" alt="movie poster">
-            </figure>
-            </figure><figure class="movie-poster">
-                <img src="./assets/img/bitcoinbaby.jpg" alt="movie poster">
-            </figure>
-            </figure><figure class="movie-poster">
-                <img src="./assets/img/bitcoinbaby.jpg" alt="movie poster">
-            </figure>
-            </figure><figure class="movie-poster">
-                <img src="./assets/img/bitcoinbaby.jpg" alt="movie poster">
-            </figure>
+        <section class="movies-scroll-container" id="search-result-container">
+            <figure class="movie-poster"></figure>
+            <figure class="movie-poster"></figure>
+            <figure class="movie-poster"></figure>
+            <figure class="movie-poster"></figure>
+            <figure class="movie-poster"></figure>
+            <figure class="movie-poster"></figure>
         </section>
     </section>
 
 
     <script src="./src/secrets.js"></script>
     <script src="./src/main.js"></script>
+    <script src="./src/navigation.js"></script>
 </body>
 </html>

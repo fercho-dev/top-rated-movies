@@ -1,8 +1,18 @@
 const BASE_API_URL = 'https://api.themoviedb.org/3';
 const TOP_RATED_PATH = '/movie/top_rated';
 const MOVIE_DETAILS_PATH = '/movie/';
+const SEARCH_PATH = '/search/movie';
 
 // oparability functions
+async function getSearchResult(keyword, page) {
+    const response = await fetch(`${BASE_API_URL}${SEARCH_PATH}?api_key=${API_KEY}&query=${keyword}&page=${page}`)
+    const data = await response.json()
+    if(response.status !== 200) {
+      console.log("Hubo un error: ", response.status, data.message);
+    } else {
+        return data.results;
+    }
+}
 
 async function getImageBaseURL(size) {
     const response = await fetch(`${BASE_API_URL}/configuration?api_key=${API_KEY}`)
@@ -55,12 +65,12 @@ async function getMovieCastCrew(id) {
     }
 }
     
-async function getMoviesByCountry(countries) {
+async function getMoviesByCountry(countries, pages) {
     let moviesFound = {};
     for(item of countries) {
         moviesFound[item] = [];
     }
-    for(let i=1; i<=500; i++) {
+    for(let i=1; i<=pages; i++) {
         await getMovies(i).then( arr => {
             for(item of arr) {
                 if(countries.includes(item.original_language)) {
@@ -104,22 +114,23 @@ function makeHeading(languageCode) {
 // build sections functions
 async function buildHomeScreen() {
     window.scrollTo({ top: 0})
+    location.hash = '#home';
+    // searchInputHome.value = "";
+    searchInputCountry.value = "";
+    searchInputSearch.value = "";
     // hide all sections and show home
-    const homeSection = document.getElementById('section--home');
     homeSection.classList.remove("inactive");
-    const movieSection = document.getElementById('section--movie');
     movieSection.classList.add("inactive");
-    const countrySection = document.getElementById('section--country');
     countrySection.classList.add("inactive");
-    const searchSection = document.getElementById('section--search');
     searchSection.classList.add("inactive");
-    const moviesContainer = document.getElementById('home-movies-container');
-    moviesContainer.innerHTML = "";
+    
 
     const countries = ['en', 'ja', 'ko', 'fr', 'es', 'de', 'zh'];
     const moviesLimit = 10;
     const imageBaseUrl = await getImageBaseURL(2);
-    await getMoviesByCountry(countries).then(obj => {
+    const moviesContainer = document.getElementById('home-movies-container');
+    await getMoviesByCountry(countries, 100).then(obj => {
+        moviesContainer.innerHTML = "";
         for(key in obj) {
             let moviesRow = `
                 <div class="section_div--movies-row">
@@ -148,39 +159,44 @@ async function buildHomeScreen() {
     })
     const seeMoreBtn = document.querySelectorAll('.see-more-btn');
     seeMoreBtn.forEach(function(btn) {
-        btn.addEventListener('click', buildCountryScreen);
+        btn.addEventListener('click', (e) => {
+            location.hash = '#language=' + e.target.id;
+        });
     })
     const movies = document.querySelectorAll('.fig-movie-poster');
     movies.forEach(function(movie) {
-        movie.addEventListener('click', buildMovieScreen);
+        movie.addEventListener('click', (e) => {
+            location.hash = '#movie=' + e.target.id;
+        });
     })
 }
 
-async function buildCountryScreen(e) {
+async function buildCountryScreen(id) {
     window.scrollTo({ top: 0});
+    searchInputHome.value = "";
+    // searchInputCountry.value = "";
+    searchInputSearch.value = "";
     // hide sections and show country
-    const homeSection = document.getElementById('section--home');
     homeSection.classList.add("inactive");
-    const countrySection = document.getElementById('section--country');
     countrySection.classList.remove("inactive");
-    const searchSection = document.getElementById('section--search');
     searchSection.classList.add("inactive");
-    const movieSection = document.getElementById('section--movie');
     movieSection.classList.add("inactive");
     
     const moviesLimit = 10;
     const headingSpan = document.getElementById('title--country');
     const countryMoviesContainer = document.getElementById('country-movies-container');
+    countryMoviesContainer.classList.add('search-results-loading');
     headingSpan.innerText = "";
-    countryMoviesContainer.innerHTML = "";
     const imageBaseUrl = await getImageBaseURL(2);
-    await getMoviesByCountry([e.target.id]).then(obj => {
-        headingSpan.innerText = `Mejores peliculas de ${makeHeading(e.target.id)}.`;
+    await getMoviesByCountry([id], 100).then(obj => {
+        countryMoviesContainer.classList.remove('search-results-loading');
+        headingSpan.innerText = `Mejores peliculas de ${makeHeading(id)}.`;
+        countryMoviesContainer.innerHTML = "";
         
         for(let i=0; i<moviesLimit; i++) {
             let fig = `
-            <figure class="movie-poster fig-movie-poster--country">
-                <img src="${imageBaseUrl}${obj[e.target.id][i].poster_path}" alt="movie poster" id="${obj[e.target.id][i].id}">
+            <figure class="movie-poster">
+                <img src="${imageBaseUrl}${obj[id][i].poster_path}" alt="movie poster" id="${obj[id][i].id}" class="fig-movie-poster--country">
             </figure>
             `
 
@@ -189,38 +205,50 @@ async function buildCountryScreen(e) {
     });
     const movies = document.querySelectorAll('.fig-movie-poster--country');
     movies.forEach(function(movie) {
-        movie.addEventListener('click', buildMovieScreen);
+        movie.addEventListener('click', (e) => {
+            location.hash = '#movie=' + e.target.id;
+        });
     });
 }
 
-async function buildMovieScreen(e) {
+async function buildMovieScreen(id) {
     window.scrollTo({ top: 0});
+    // searchInputHome.value = "";
+    // searchInputCountry.value = "";
+    // searchInputSearch.value = "";
     // hide sections and show movie
-    const homeSection = document.getElementById('section--home');
     homeSection.classList.add("inactive");
-    const countrySection = document.getElementById('section--country');
     countrySection.classList.add("inactive");
-    const searchSection = document.getElementById('section--search');
     searchSection.classList.add("inactive");
-    const movieSection = document.getElementById('section--movie');
     movieSection.classList.remove("inactive");
 
     const movieCover = document.getElementById('movie-cover-id');
+    const movieCoverLoading = document.getElementById('movie-cover-loading');
+    movieCoverLoading.classList.add('movie-cover-loading');
+    movieCover.src = "";
     const movieVote = document.getElementById('movie-vote-average');
+    movieVote.innerText = "";
     const movieOverview = document.getElementById('movie-overview');
+    movieOverview.innerText = "";
+    movieOverview.classList.add('movie-overview-loading');
     const movieTitle = document.getElementById('movie-original-title');
+    movieTitle.innerText = "";
+    const streamingContainer = document.getElementById('streaming-container');
+    streamingContainer.innerHTML = "";
+    const movieCastContainer = document.getElementById('movie-cast-crew-container');
+    movieCastContainer.classList.add('cast-people-loading');
     let imageBaseUrl = await getImageBaseURL(3);
-    await getMovieDetails(e.target.id).then(obj => {
+    await getMovieDetails(id).then(obj => {
+        movieCoverLoading.classList.remove('movie-cover-loading');
+        movieOverview.classList.remove('movie-overview-loading');
         movieCover.src = `${imageBaseUrl}${obj.poster_path}`;
         movieVote.innerText = obj.vote_average.toFixed(1);
         movieOverview.innerText = obj.overview;
         movieTitle.innerText = obj.title;
     });
     imageBaseUrl = await getImageBaseURL(1);
-    const streamingContainer = document.getElementById('streaming-container');
-    await getMovieProviders(e.target.id).then(obj => {
+    await getMovieProviders(id).then(obj => {
         if(obj['MX'].flatrate) {
-            streamingContainer.innerHTML = "";
             for(item of obj['MX'].flatrate) {
                 img = `
                     <img src="${imageBaseUrl}${item.logo_path}" alt="plataforma logo">
@@ -232,8 +260,8 @@ async function buildMovieScreen(e) {
     }).catch( e => {
         streamingContainer.innerHTML = "<p>😿 Por ahora esta pelicula no está disponible en streaming.</p>"
     });
-    const movieCastContainer = document.getElementById('movie-cast-crew-container');
-    await getMovieCastCrew(e.target.id).then(obj => {
+    await getMovieCastCrew(id).then(obj => {
+        movieCastContainer.classList.remove('cast-people-loading');
         movieCastContainer.innerHTML = "";
         // get crew
         for(item of obj.crew) {
@@ -298,33 +326,125 @@ async function buildMovieScreen(e) {
     });
 }
 
-// initializa app
+async function buildSearchScreen(keyword, page) {
+    window.scrollTo({ top: 0});
+    searchInputHome.value = "";
+    searchInputCountry.value = "";
+    // searchInputSearch.value = "";
+    // hide sections and show movie
+    homeSection.classList.add("inactive");
+    countrySection.classList.add("inactive");
+    searchSection.classList.remove("inactive");
+    movieSection.classList.add("inactive");
 
-function startPage() {
-    // general elements and event listeners
-
-    // movie overview
-    const movieOverview = document.getElementById('movie-overview');
-    let countClicksMovieOverview = 0;
-    movieOverview.addEventListener('click', (e) => {
-        countClicksMovieOverview += 1;
-        if(countClicksMovieOverview % 2 === 0) {
-            movieOverview.style.webkitLineClamp = 3;
-        } else {
-            movieOverview.style.webkitLineClamp = 'unset';
-        }
-    })
-
-    // movie back button
-    const movieBackButton = document.getElementById('movie-back-btn');
-    movieBackButton.addEventListener('click', buildHomeScreen);
-    
-    // country back button
-    const countryBackButton = document.getElementById('country-back-btn');
-    countryBackButton.addEventListener('click', buildHomeScreen);
-
-    // create home screen
-    buildHomeScreen();
+    const searchResultContainer = document.getElementById('search-result-container');
+    searchResultContainer.classList.add('search-results-loading');
+    imageBaseUrl = await getImageBaseURL(2);
+    await getSearchResult(keyword, page).then(arr => {
+        searchResultContainer.classList.remove('search-results-loading');
+        searchResultContainer.innerHTML = ""
+        for(item of arr) {
+                let fig = `
+                <figure class="movie-poster">
+                    <img src="${imageBaseUrl}${item.poster_path}" alt="movie poster" id="${item.id}" class="fig-movie-poster--country">
+                </figure>
+                `
+                searchResultContainer.innerHTML += fig;
+        };
+    });
+    const movies = document.querySelectorAll('.fig-movie-poster--country');
+    movies.forEach(function(movie) {
+        movie.addEventListener('click', (e) => {
+            location.hash = '#movie=' + e.target.id;
+        });
+    });
 }
 
-startPage();
+// general elements and event listeners
+const homeSection = document.getElementById('section--home');
+const countrySection = document.getElementById('section--country');
+const searchSection = document.getElementById('section--search');
+const movieSection = document.getElementById('section--movie');
+
+// movie overview
+const movieOverview = document.getElementById('movie-overview');
+let countClicksMovieOverview = 0;
+movieOverview.addEventListener('click', (e) => {
+    countClicksMovieOverview += 1;
+    if(countClicksMovieOverview % 2 === 0) {
+        movieOverview.style.webkitLineClamp = 3;
+    } else {
+        movieOverview.style.webkitLineClamp = 'unset';
+    }
+})
+
+// movie back button
+const movieBackButton = document.getElementById('movie-back-btn');
+movieBackButton.addEventListener('click', () => {
+    location.hash = window.history.back();
+});
+
+// movie home button
+const movieHomeButton = document.getElementById('movie-home-btn');
+movieHomeButton.addEventListener('click', () => {
+    location.hash = "#home";
+});
+
+// country back button
+const countryBackButton = document.getElementById('country-back-btn');
+countryBackButton.addEventListener('click', () => {
+    location.hash = window.history.back();
+});
+
+// country home button
+const countryHomeButton = document.getElementById('country-home-btn');
+countryHomeButton.addEventListener('click', () => {
+    location.hash = "#home";
+});
+
+// search back button
+const searchBackButton = document.getElementById('search-back-btn');
+searchBackButton.addEventListener('click', () => {
+    location.hash = window.history.back();
+});
+
+// search home button
+const searchHomeButton = document.getElementById('search-home-btn');
+searchHomeButton.addEventListener('click', () => {
+    location.hash = "#home";
+});
+
+// search button and input
+const searchInputHome = document.getElementById('search-input-home');
+const searchInputCountry = document.getElementById('search-input-country');
+const searchInputSearch = document.getElementById('search-input-search');
+const searchBtn = document.querySelectorAll('.search-btn')
+searchBtn.forEach(function(btn) {
+    btn.addEventListener('click', (e) => {
+        if(searchInputHome.value !== "") {
+            location.hash = `#search=${searchInputHome.value}`;
+        } else if(searchInputCountry.value !== "") {
+            location.hash = `#search=${searchInputCountry.value}`;
+        } else if(searchInputSearch.value !== "") {
+            location.hash = `#search=${searchInputSearch.value}`;
+        }
+        else {
+            alert('no valid search')
+        }
+    });
+});
+searchInputHome.addEventListener('keydown', (e) => {
+    if(e.key === 'Enter') {
+        location.hash = `#search=${searchInputHome.value}`;
+    }
+});
+searchInputCountry.addEventListener('keydown', (e) => {
+    if(e.key === 'Enter') {
+        location.hash = `#search=${searchInputCountry.value}`;
+    }
+});
+searchInputSearch.addEventListener('keydown', (e) => {
+    if(e.key === 'Enter') {
+        location.hash = `#search=${searchInputSearch.value}`;
+    }
+});
