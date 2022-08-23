@@ -106,6 +106,9 @@ function makeHeading(languageCode) {
         case 'ko':
             heading = 'Corea';
             break;
+        case 'it':
+            heading = 'Italia';
+            break;
 
     }
     return heading
@@ -125,11 +128,11 @@ async function buildHomeScreen() {
     searchSection.classList.add("inactive");
     
 
-    const countries = ['en', 'ja', 'ko', 'fr', 'es', 'de', 'zh'];
+    const countries = ['en', 'ja', 'ko', 'fr', 'es', 'de', 'zh', 'it'];
     const moviesLimit = 10;
     const imageBaseUrl = await getImageBaseURL(2);
     const moviesContainer = document.getElementById('home-movies-container');
-    await getMoviesByCountry(countries, 100).then(obj => {
+    await getMoviesByCountry(countries, 51).then(obj => {
         moviesContainer.innerHTML = "";
         for(key in obj) {
             let moviesRow = `
@@ -149,26 +152,30 @@ async function buildHomeScreen() {
             for(let i=0; i<moviesLimit; i++) {
                 let fig = `
                     <figure class="fig-movie-poster">
-                        <img src="${imageBaseUrl}${obj[key][i].poster_path}" alt="movie poster" id="${obj[key][i].id}">
+                        <img data-img="${imageBaseUrl}${obj[key][i].poster_path}" alt="${obj[key][i].title}" id="${obj[key][i].id}" class="home-section--movie-poster-img">
                     </figure>
                 `
 
                 slider.innerHTML += fig;
             }
         }
-    })
+    });
     const seeMoreBtn = document.querySelectorAll('.see-more-btn');
     seeMoreBtn.forEach(function(btn) {
         btn.addEventListener('click', (e) => {
             location.hash = '#language=' + e.target.id;
         });
-    })
+    });
     const movies = document.querySelectorAll('.fig-movie-poster');
     movies.forEach(function(movie) {
         movie.addEventListener('click', (e) => {
             location.hash = '#movie=' + e.target.id;
         });
-    })
+    });
+    const imgs = document.querySelectorAll('.home-section--movie-poster-img');
+    imgs.forEach(function(img) {
+        lazyLoader.observe(img);
+    });
 }
 
 async function buildCountryScreen(id) {
@@ -182,7 +189,6 @@ async function buildCountryScreen(id) {
     searchSection.classList.add("inactive");
     movieSection.classList.add("inactive");
     
-    const moviesLimit = 10;
     const headingSpan = document.getElementById('title--country');
     const countryMoviesContainer = document.getElementById('country-movies-container');
     countryMoviesContainer.classList.add('search-results-loading');
@@ -193,10 +199,10 @@ async function buildCountryScreen(id) {
         headingSpan.innerText = `Mejores peliculas de ${makeHeading(id)}.`;
         countryMoviesContainer.innerHTML = "";
         
-        for(let i=0; i<moviesLimit; i++) {
+        for(item of obj[id]) {
             let fig = `
             <figure class="movie-poster">
-                <img src="${imageBaseUrl}${obj[id][i].poster_path}" alt="movie poster" id="${obj[id][i].id}" class="fig-movie-poster--country">
+                <img data-img="${imageBaseUrl}${item.poster_path}" alt="${item.title}" id="${item.id}" class="fig-movie-poster--country">
             </figure>
             `
 
@@ -208,6 +214,7 @@ async function buildCountryScreen(id) {
         movie.addEventListener('click', (e) => {
             location.hash = '#movie=' + e.target.id;
         });
+        lazyLoader.observe(movie);
     });
 }
 
@@ -251,7 +258,7 @@ async function buildMovieScreen(id) {
         if(obj['MX'].flatrate) {
             for(item of obj['MX'].flatrate) {
                 img = `
-                    <img src="${imageBaseUrl}${item.logo_path}" alt="plataforma logo">
+                    <img src="${imageBaseUrl}${item.logo_path}" alt="${item.provider_name}">
                 `
 
                 streamingContainer.innerHTML += img;
@@ -270,7 +277,7 @@ async function buildMovieScreen(id) {
                 case "Director":
                     crewMember = `
                     <figure class="cast-person">
-                        <img src="${imageBaseUrl}${item.profile_path}" alt="profile-picture">
+                        <img src="${imageBaseUrl}${item.profile_path}" alt="${item.name}">
                         <span>${item.name}</span>
                         <span>(${item.job})</span>
                     </figure>
@@ -280,7 +287,7 @@ async function buildMovieScreen(id) {
                 case "Director of Photography":
                     crewMember = `
                     <figure class="cast-person">
-                        <img src="${imageBaseUrl}${item.profile_path}" alt="profile-picture">
+                        <img src="${imageBaseUrl}${item.profile_path}" alt="${item.name}">
                         <span>${item.name}</span>
                         <span>(${item.job})</span>
                     </figure>
@@ -290,7 +297,7 @@ async function buildMovieScreen(id) {
                 case "Screenplay":
                     crewMember = `
                     <figure class="cast-person">
-                        <img src="${imageBaseUrl}${item.profile_path}" alt="profile-picture">
+                        <img src="${imageBaseUrl}${item.profile_path}" alt="${item.name}">
                         <span>${item.name}</span>
                         <span>(${item.job})</span>
                     </figure>
@@ -300,7 +307,7 @@ async function buildMovieScreen(id) {
                 case "Producer":
                     crewMember = `
                     <figure class="cast-person">
-                        <img src="${imageBaseUrl}${item.profile_path}" alt="profile-picture">
+                        <img src="${imageBaseUrl}${item.profile_path}" alt="${item.name}">
                         <span>${item.name}</span>
                         <span>(${item.job})</span>
                     </figure>
@@ -316,7 +323,7 @@ async function buildMovieScreen(id) {
         for(let i=0; i<10; i++) {
             let castMember = `
             <figure class="cast-person">
-                <img src="${imageBaseUrl}${obj.cast[i].profile_path}" alt="profile-picture">
+                <img src="${imageBaseUrl}${obj.cast[i].profile_path}" alt="${obj.cast[i].name}">
                 <span>${obj.cast[i].name}</span>
                 <span>(${obj.cast[i].character})</span>
             </figure>
@@ -346,7 +353,7 @@ async function buildSearchScreen(keyword, page) {
         for(item of arr) {
                 let fig = `
                 <figure class="movie-poster">
-                    <img src="${imageBaseUrl}${item.poster_path}" alt="movie poster" id="${item.id}" class="fig-movie-poster--country">
+                    <img src="${imageBaseUrl}${item.poster_path}" alt="${item.title}" id="${item.id}" class="fig-movie-poster--country">
                 </figure>
                 `
                 searchResultContainer.innerHTML += fig;
@@ -356,6 +363,9 @@ async function buildSearchScreen(keyword, page) {
     movies.forEach(function(movie) {
         movie.addEventListener('click', (e) => {
             location.hash = '#movie=' + e.target.id;
+        });
+        movie.addEventListener('error', () => {
+            movie.setAttribute('src', errorImage)
         });
     });
 }
@@ -448,3 +458,16 @@ searchInputSearch.addEventListener('keydown', (e) => {
         location.hash = `#search=${searchInputSearch.value}`;
     }
 });
+
+// lazy loading images
+const lazyLoader = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+        if(entry.isIntersecting) {
+            const url = entry.target.getAttribute('data-img');
+            entry.target.setAttribute('src', url);
+        }
+    });
+});
+
+// imagen error
+const errorImage = '../assets/icons/error.svg';
