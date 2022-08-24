@@ -103,8 +103,4 @@ dist
 # TernJS port file
 .tern-port
 
-
-# hide my api key
-src/secrets.js
-
 .DS_Store

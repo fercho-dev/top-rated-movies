@@ -5,7 +5,7 @@ const SEARCH_PATH = '/search/movie';
 
 // oparability functions
 async function getSearchResult(keyword, page) {
-    const response = await fetch(`${BASE_API_URL}${SEARCH_PATH}?api_key=${process.env.API_KEY}&query=${keyword}&page=${page}`)
+    const response = await fetch(`${BASE_API_URL}${SEARCH_PATH}?api_key=${API_KEY}&query=${keyword}&page=${page}`)
     const data = await response.json()
     if(response.status !== 200) {
       console.log("Hubo un error: ", response.status, data.message);
@@ -15,7 +15,7 @@ async function getSearchResult(keyword, page) {
 }
 
 async function getImageBaseURL(size) {
-    const response = await fetch(`${BASE_API_URL}/configuration?api_key=${process.env.API_KEY}`)
+    const response = await fetch(`${BASE_API_URL}/configuration?api_key=${API_KEY}`)
     const data = await response.json()
     if(response.status !== 200) {
       console.log("Hubo un error: ", response.status, data.message);
@@ -26,7 +26,7 @@ async function getImageBaseURL(size) {
 
 // the api has 500 pages
 async function getMovies(page) {
-    const response = await fetch(`${BASE_API_URL}${TOP_RATED_PATH}?api_key=${process.env.API_KEY}&page=${page}`)
+    const response = await fetch(`${BASE_API_URL}${TOP_RATED_PATH}?api_key=${API_KEY}&page=${page}`)
     const data = await response.json()
     if(response.status !== 200) {
       console.log("Hubo un error: ", response.status, data.message);
@@ -36,7 +36,7 @@ async function getMovies(page) {
 }
 
 async function getMovieDetails(id) {
-    const response = await fetch(`${BASE_API_URL}${MOVIE_DETAILS_PATH}${id}?api_key=${process.env.API_KEY}&language=es`)
+    const response = await fetch(`${BASE_API_URL}${MOVIE_DETAILS_PATH}${id}?api_key=${API_KEY}&language=es`)
     const data = await response.json()
     if(response.status !== 200) {
         console.log("Hubo un error: ", response.status, data.message);
@@ -46,7 +46,7 @@ async function getMovieDetails(id) {
 }
 
 async function getMovieProviders(id) {
-    const response = await fetch(`${BASE_API_URL}${MOVIE_DETAILS_PATH}${id}/watch/providers?api_key=${process.env.API_KEY}&language=es`)
+    const response = await fetch(`${BASE_API_URL}${MOVIE_DETAILS_PATH}${id}/watch/providers?api_key=${API_KEY}&language=es`)
     const data = await response.json()
     if(response.status !== 200) {
         console.log("Hubo un error: ", response.status, data.message);
@@ -56,7 +56,7 @@ async function getMovieProviders(id) {
 }
 
 async function getMovieCastCrew(id) {
-    const response = await fetch(`${BASE_API_URL}${MOVIE_DETAILS_PATH}${id}/credits?api_key=${process.env.API_KEY}`)
+    const response = await fetch(`${BASE_API_URL}${MOVIE_DETAILS_PATH}${id}/credits?api_key=${API_KEY}`)
     const data = await response.json()
     if(response.status !== 200) {
         console.log("Hubo un error: ", response.status, data.message);
