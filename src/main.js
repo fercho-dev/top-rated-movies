@@ -65,10 +65,20 @@ async function getMovieCastCrew(id) {
     }
 }
     
-async function getMoviesByCountry(countries, pages) {
+async function getMoviesByCountry(countries) {
     let moviesFound = {};
     for(item of countries) {
         moviesFound[item] = [];
+    }
+    let pages;
+    if(countries.length === 1) {
+        if(countries[0] === 'en') {
+            pages = 10;
+        } else {
+            pages = 100;
+        }
+    } else {
+        pages = 51;
     }
     for(let i=1; i<=pages; i++) {
         await getMovies(i).then( arr => {
@@ -132,7 +142,7 @@ async function buildHomeScreen() {
     const moviesLimit = 10;
     const imageBaseUrl = await getImageBaseURL(2);
     const moviesContainer = document.getElementById('home-movies-container');
-    await getMoviesByCountry(countries, 51).then(obj => {
+    await getMoviesByCountry(countries).then(obj => {
         moviesContainer.innerHTML = "";
         for(key in obj) {
             let moviesRow = `
@@ -194,7 +204,7 @@ async function buildCountryScreen(id) {
     countryMoviesContainer.classList.add('search-results-loading');
     headingSpan.innerText = "";
     const imageBaseUrl = await getImageBaseURL(2);
-    await getMoviesByCountry([id], 100).then(obj => {
+    await getMoviesByCountry([id]).then(obj => {
         countryMoviesContainer.classList.remove('search-results-loading');
         headingSpan.innerText = `Mejores peliculas de ${makeHeading(id)}.`;
         countryMoviesContainer.innerHTML = "";

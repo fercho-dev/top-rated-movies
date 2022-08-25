@@ -1,0 +1,40 @@
+/* movie screen */
+
+.movie-cover-overview-container {
+    display: flex;
+    margin-bottom: 15px;
+}
+
+.movie-cover-overview-container .movie-cover {
+    width: 60%;
+    padding: 40px 0 0 40px;
+}
+
+.movie-cover-overview-container .movie-description { 
+    width: 40%;
+    padding-top: 40px;
+}
+
+.movie-description p {
+    font-size: 1.6rem;
+}
+
+.cast-people-container {
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+}
+
+/* country screen */
+.section_header--country {
+    justify-content: flex-start;
+    gap: 16px;
+}
+
+.movies-scroll-container {
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+}
+
+/* search screen */
+.section_header--search {
+    justify-content: flex-start;
+    gap: 16px;
+}

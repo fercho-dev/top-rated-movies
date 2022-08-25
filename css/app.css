@@ -53,6 +53,8 @@ body {
     background-color: var(--softYellow);
     font-size: 1.4rem;
     font-weight: 400;
+    outline: none;
+    width: 100%;
 }
 
 .search-btn {
@@ -64,6 +66,7 @@ body {
     background-position: center;
     background-size: cover;
     background-repeat: no-repeat;
+    cursor: pointer;
 }
 
 #section--home h2 {
@@ -106,6 +109,7 @@ body {
     color: var(--yellow);
     font-size: 1.4rem;
     font-weight: 700;
+    cursor: pointer;
 }
 
 .section_div--movies-row .movies--slider {
@@ -115,9 +119,14 @@ body {
     padding-left: 10px;
 }
 
+.section_div--movies-row .movies--slider::-webkit-scrollbar {
+    height: 0px;
+}
+
 .movies--slider figure {
     width: 128px;
     height: 180px;
+    cursor: pointer;
 }
 
 .movies--slider img {
